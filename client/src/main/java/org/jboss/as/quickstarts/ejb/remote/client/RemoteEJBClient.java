@@ -30,7 +30,7 @@ public class RemoteEJBClient {
     public static void main(String[] args) throws Exception {
         List<RemoteCalculator> remoteCalculators = new CopyOnWriteArrayList<>();
         List<InitialContext> initialContexts = new CopyOnWriteArrayList<>();
-        IntStream.range(0, 100).parallel().forEach(i -> {
+        IntStream.range(0, 5000).parallel().forEach(i -> {
             RemoteCalculator remoteCalculator = null;
             try {
                 InitialContext initialContext = createInitialContext();
@@ -84,7 +84,7 @@ public class RemoteEJBClient {
     private static InitialContext createInitialContext() throws NamingException {
         Properties properties = new Properties();
         properties.put("java.naming.factory.initial", "org.jboss.naming.remote.client.InitialContextFactory");
-        properties.put("java.naming.provider.url", "http-remoting://jboss-app-remote-ejb.apps.ocppoc.balgroupit.com:80");
+        properties.put("java.naming.provider.url", "http-remoting://localhost:8080");
 
         properties.put("jboss.naming.client.connect.options.org.xnio.Options.SASL_POLICY_NOPLAINTEXT", "false");
         properties.put("jboss.naming.client.ejb.context", "true");
