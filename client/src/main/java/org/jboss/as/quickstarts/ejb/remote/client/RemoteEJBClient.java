@@ -28,12 +28,33 @@ import java.util.stream.IntStream;
 public class RemoteEJBClient {
 
     public static void main(String[] args) throws Exception {
+        if (args.length != 4) {
+            System.out.println("Please provide the following arguments:");
+            System.out.println("--host # Declaring the Remote Server e.g. localhost:8080");
+            System.out.println("--connections # The amount of connections to create e.g. 200");
+            System.exit(1);
+        }
+        Integer connections = 0;
+        String host = "";
+        for (int i = 0; i < args.length; i++) {
+            if ("--host".equals(args[i])) {
+                host = args[i + 1];
+            }
+            if ("--connections".equals(args[i])) {
+                connections = Integer.valueOf(args[i + 1]);
+            }
+        }
+        if ("".equals(host) || connections == 0) {
+            throw new IllegalArgumentException("Invalid host or connection amount (host: " + host + "; connections: " + connections + ")");
+        }
+        final String finalHost = host;
+
         List<RemoteCalculator> remoteCalculators = new CopyOnWriteArrayList<>();
         List<InitialContext> initialContexts = new CopyOnWriteArrayList<>();
-        IntStream.range(0, 5000).parallel().forEach(i -> {
+        IntStream.range(0, connections).parallel().forEach(i -> {
             RemoteCalculator remoteCalculator = null;
             try {
-                InitialContext initialContext = createInitialContext();
+                InitialContext initialContext = createInitialContext(finalHost);
                 initialContexts.add(initialContext);
                 remoteCalculator = lookupRemoteStatelessCalculator(initialContext);
                 System.out.println("Created remote calculator #" + i);
@@ -43,36 +64,10 @@ public class RemoteEJBClient {
                 e.printStackTrace();
             }
         });
-        while(true) {
+
+        while (true) {
             System.out.println("Idling...");
             Thread.sleep(5000);
-        }
-    }
-
-    private static void invokeStatelessBean() throws NamingException {
-        // Let's lookup the remote stateless calculator
-        final RemoteCalculator statelessRemoteCalculator = lookupRemoteStatelessCalculator(createInitialContext());
-        System.out.println("Obtained a remote stateless calculator for invocation");
-        // invoke on the remote calculator
-        int a = 204;
-        int b = 340;
-        System.out.println("Adding " + a + " and " + b + " via the remote stateless calculator deployed on the server");
-        int sum = statelessRemoteCalculator.add(a, b);
-        System.out.println("Remote calculator returned sum = " + sum);
-        if (sum != a + b) {
-            throw new RuntimeException("Remote stateless calculator returned an incorrect sum " + sum + " ,expected sum was "
-                    + (a + b));
-        }
-        // try one more invocation, this time for subtraction
-        int num1 = 3434;
-        int num2 = 2332;
-        System.out.println("Subtracting " + num2 + " from " + num1
-                + " via the remote stateless calculator deployed on the server");
-        int difference = statelessRemoteCalculator.subtract(num1, num2);
-        System.out.println("Remote calculator returned difference = " + difference);
-        if (difference != num1 - num2) {
-            throw new RuntimeException("Remote stateless calculator returned an incorrect difference " + difference
-                    + " ,expected difference was " + (num1 - num2));
         }
     }
 
@@ -81,12 +76,10 @@ public class RemoteEJBClient {
         return (RemoteCalculator) ctx.lookup("ejb-remote-server-side-1.0.0-SNAPSHOT/CalculatorBean!org.jboss.as.quickstarts.ejb.remote.stateless.RemoteCalculator");
     }
 
-    private static InitialContext createInitialContext() throws NamingException {
+    private static InitialContext createInitialContext(String remoteHost) throws NamingException {
         Properties properties = new Properties();
         properties.put("java.naming.factory.initial", "org.jboss.naming.remote.client.InitialContextFactory");
-        properties.put("java.naming.provider.url", "http-remoting://localhost:8080");
-
-        properties.put("jboss.naming.client.connect.options.org.xnio.Options.SASL_POLICY_NOPLAINTEXT", "false");
+        properties.put("java.naming.provider.url", "http-remoting://" + remoteHost);
         properties.put("jboss.naming.client.ejb.context", "true");
         return new InitialContext(properties);
     }
