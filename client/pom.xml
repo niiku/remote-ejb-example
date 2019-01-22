@@ -15,7 +15,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -24,26 +25,24 @@
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>ejb-remote-client</artifactId>
     <packaging>jar</packaging>
     <name>Quickstart: ejb-remote - client</name>
-    <description>This project demonstrates how to access an EJB from a remote client; this is the client POM file</description>
+    <description>This project demonstrates how to access an EJB from a remote client; this is the client POM file
+    </description>
 
     <properties>
-            <http>false</http>
+        <http>false</http>
     </properties>
 
     <dependencies>
-
-        <!-- Include the ejb client jars -->
         <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-ejb-client-bom</artifactId>
             <type>pom</type>
             <scope>compile</scope>
         </dependency>
-
-        <!-- We depend on the EJB remote business interfaces of this application -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ejb-remote-server-side</artifactId>
@@ -56,56 +55,51 @@
             <artifactId>jboss-client-all</artifactId>
             <version>7.0.9</version>
         </dependency>
+        <dependency>
+            <groupId>ch.basler.target.base</groupId>
+            <artifactId>TargetJBoss7</artifactId>
+            <version>4.0.9</version>
+        </dependency>
 
+        <dependency>
+            <groupId>ch.basler.target.base</groupId>
+            <artifactId>TargetAppServerAbstraction</artifactId>
+            <version>4.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-
-            <!-- Add the maven exec plug-in to allow us to run a java program
-                via maven -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <configuration>
-                    <executable>java</executable>
-                    <workingDirectory>${project.build.directory}/exec-working-directory</workingDirectory>
-                    <arguments>
-                        <argument>-Dhttp=${http}</argument>
-                        <argument>-classpath</argument>
-                        <classpath></classpath>
-                        <argument>org.jboss.as.quickstarts.ejb.remote.client.RemoteEJBClient</argument>
-                    </arguments>
-                    <!--<detail>true</detail>-->
-                </configuration>
-                <!--<executions>
-                    <execution>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>-->
-            </plugin>
-            <!-- build standalone exe jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
                         <manifest>
+                            <addClasspath>true</addClasspath>
                             <mainClass>org.jboss.as.quickstarts.ejb.remote.client.RemoteEJBClient</mainClass>
                         </manifest>
-                        <manifestEntries>
-                            <Multi-Release>true</Multi-Release>
-                        </manifestEntries>
                     </archive>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>assemble-all</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
-
     </build>
-
 </project>
