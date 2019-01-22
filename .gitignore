@@ -6,5 +6,9 @@
 classes/
 target/
 bin/
+*/target/**
+*/classes/**
+*/bin/**
+*/*/*.iml
 .cvsignore
 .fbwarnings
