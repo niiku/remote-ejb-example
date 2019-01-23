@@ -399,7 +399,12 @@
         <subsystem xmlns="urn:jboss:domain:pojo:1.0"/>
         <subsystem xmlns="urn:jboss:domain:remoting:4.0">
             <endpoint/>
-            <http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm"/>
+            <http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm">
+                <properties>
+                    <property name="SASL_MECHANISMS" value="ANONYMOUS,PLAIN"/>
+                    <property name="SASL_POLICY_NOANONYMOUS" value="false"/>
+                </properties>
+            </http-connector>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:resource-adapters:5.0"/>
         <subsystem xmlns="urn:jboss:domain:request-controller:1.0"/>
