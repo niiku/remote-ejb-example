@@ -80,6 +80,7 @@ public class RemoteEJBClient {
         Properties properties = new Properties();
         properties.put("java.naming.factory.initial", "org.jboss.naming.remote.client.InitialContextFactory");
         properties.put("java.naming.provider.url", "http-remoting://" + remoteHost);
+        properties.put("jboss.naming.client.connect.options.org.xnio.Options.SASL_POLICY_NOPLAINTEXT", "false");
         properties.put("jboss.naming.client.ejb.context", "true");
         return new InitialContext(properties);
     }
