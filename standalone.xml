@@ -403,6 +403,9 @@
                 <properties>
                     <property name="SASL_MECHANISMS" value="ANONYMOUS,PLAIN"/>
                     <property name="SASL_POLICY_NOANONYMOUS" value="false"/>
+                    <property name="READ_TIMEOUT" value="60000"/>
+                    <property name="KEEP_ALIVE" value="true"/>
+                    <property name="org.jboss.remoting3.RemotingOptions.HEARTBEAT_INTERVAL" value="15000"/>
                 </properties>
             </http-connector>
         </subsystem>

@@ -17,6 +17,11 @@
 package org.jboss.as.quickstarts.ejb.remote.client;
 
 import org.jboss.as.quickstarts.ejb.remote.stateless.RemoteCalculator;
+import org.jboss.ejb.client.ContextSelector;
+import org.jboss.ejb.client.EJBClientConfiguration;
+import org.jboss.ejb.client.EJBClientContext;
+import org.jboss.ejb.client.PropertiesBasedEJBClientConfiguration;
+import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -47,6 +52,15 @@ public class RemoteEJBClient {
         if ("".equals(host) || connections == 0) {
             throw new IllegalArgumentException("Invalid host or connection amount (host: " + host + "; connections: " + connections + ")");
         }
+
+        Properties p = new Properties();
+        p.put("connect.options.org.xnio.Options.READ_TIMEOUT", 60000);
+        p.put("connect.options.org.xnio.Options.KEEP_ALIVE", true);
+        p.put("org.jboss.remoting3.RemotingOptions.HEARTBEAT_INTERVAL", 30000);
+        EJBClientConfiguration cc = new PropertiesBasedEJBClientConfiguration(p);
+        ContextSelector<EJBClientContext> selector = new ConfigBasedEJBClientContextSelector(cc);
+        EJBClientContext.setSelector(selector);
+
         final String finalHost = host;
 
         List<RemoteCalculator> remoteCalculators = new CopyOnWriteArrayList<>();
@@ -82,6 +96,8 @@ public class RemoteEJBClient {
         properties.put("java.naming.provider.url", "http-remoting://" + remoteHost);
         properties.put("jboss.naming.client.connect.options.org.xnio.Options.SASL_POLICY_NOPLAINTEXT", "false");
         properties.put("jboss.naming.client.ejb.context", "true");
+
+
         return new InitialContext(properties);
     }
 
