@@ -52,8 +52,8 @@
 
         <dependency>
             <groupId>org.jboss.eap</groupId>
-            <artifactId>jboss-client-all</artifactId>
-            <version>7.0.9</version>
+            <artifactId>wildfly-client-all</artifactId>
+            <version>7.1.5.GA-redhat-00002</version>
         </dependency>
         <dependency>
             <groupId>ch.basler.target.base</groupId>
