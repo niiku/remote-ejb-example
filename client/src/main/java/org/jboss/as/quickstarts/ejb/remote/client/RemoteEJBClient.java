@@ -53,13 +53,13 @@ public class RemoteEJBClient {
             throw new IllegalArgumentException("Invalid host or connection amount (host: " + host + "; connections: " + connections + ")");
         }
 
-        Properties p = new Properties();
-        p.put("connect.options.org.xnio.Options.READ_TIMEOUT", 60000);
-        p.put("connect.options.org.xnio.Options.KEEP_ALIVE", true);
-        p.put("org.jboss.remoting3.RemotingOptions.HEARTBEAT_INTERVAL", 30000);
-        EJBClientConfiguration cc = new PropertiesBasedEJBClientConfiguration(p);
-        ContextSelector<EJBClientContext> selector = new ConfigBasedEJBClientContextSelector(cc);
-        EJBClientContext.setSelector(selector);
+//        Properties p = new Properties();
+//        p.put("connect.options.org.xnio.Options.READ_TIMEOUT", 60000);
+//        p.put("connect.options.org.xnio.Options.KEEP_ALIVE", true);
+//        p.put("org.jboss.remoting3.RemotingOptions.HEARTBEAT_INTERVAL", 30000);
+//        EJBClientConfiguration cc = new PropertiesBasedEJBClientConfiguration(p);
+//        ContextSelector<EJBClientContext> selector = new ConfigBasedEJBClientContextSelector(cc);
+//        EJBClientContext.setSelector(selector);
 
         final String finalHost = host;
 
