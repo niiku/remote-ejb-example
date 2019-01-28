@@ -51,20 +51,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.eap</groupId>
+            <groupId>org.wildfly</groupId>
             <artifactId>wildfly-client-all</artifactId>
-            <version>7.1.5.GA-redhat-00002</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.basler.target.base</groupId>
-            <artifactId>TargetJBoss7</artifactId>
-            <version>4.0.9</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.basler.target.base</groupId>
-            <artifactId>TargetAppServerAbstraction</artifactId>
-            <version>4.0.9</version>
+            <version>11.0.0.Final</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
